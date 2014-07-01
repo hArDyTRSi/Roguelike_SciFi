@@ -35,15 +35,20 @@ Floor activeFloor = null;
 
 void Awake()
 {
-	RemoveLevel();
+	if(activeFloor != null)
+	{
+		RemoveLevel();
+	}
 }
 
 
 void Start()
 {
 //	player = GameObject.FindGameObjectWithTag("Player");
-
-	MakeLevel();
+	if(activeFloor != null)
+	{
+		MakeLevel();
+	}
 }
 /*	
 void Update()
@@ -126,8 +131,8 @@ void SetPlayerPosition()
 
 		if(activeFloor.blockMap[x, z] == 255)
 		{		
-			player.transform.position = new Vector3(x, 10.0f, z);
-			player.rigidbody.velocity = new Vector3(0, 0, 0);
+			player.transform.position = new Vector3(x, 0.1f, z);
+//			player.rigidbody.velocity = new Vector3(0, 0, 0);
 			playerPositioned = true;
 		}
 	}
