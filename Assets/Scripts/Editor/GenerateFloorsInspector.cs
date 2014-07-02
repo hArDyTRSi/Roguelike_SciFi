@@ -1,4 +1,4 @@
-﻿using UnityEditor;
+using UnityEditor;
 using UnityEngine;
 //using System.Collections;
 
@@ -17,13 +17,13 @@ public override void OnInspectorGUI()
 	if(GUILayout.Button("ReDraw"))
 	{
 		GenerateFloors gf = (GenerateFloors)target;
-		gf.MakeLevel();
+		gf.MakeFloor();
 	}
 	
 	if(GUILayout.Button("Remove"))
 	{
 		GenerateFloors gf = (GenerateFloors)target;
-		gf.RemoveLevel();
+		gf.RemoveFloor();
 	}
 }
 

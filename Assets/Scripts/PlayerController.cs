@@ -16,116 +16,113 @@ Vector3 velocity = Vector3.zero;
 
 //#################################################################################################
 
-
+/*
 void Start()
 {
 //	cam = Camera.main;
 }
-
+*/
 
 void Update()
 {
-//	if(transform.position.y < 0.1f)
-//	{
-	transform.position = new Vector3(transform.position.x, 0.1f, transform.position.z);
-//	rigidbody.velocity = new Vector3(0, 0, 0);
-//	}
-
 //	velocity = new Vector3(Input.GetAxis("Horizontal"), -9.81f, Input.GetAxis("Vertical"));
 	velocity = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
 
 	velocity = Quaternion.Euler(0, 45, 0) * velocity;
-	
-//	velocity *= moveSpeed;
-//	velocity *= Time.deltaTime;
+
+	velocity *= moveSpeed;
+	velocity *= Time.deltaTime;
 
 	ClampVelocity();
-
-	transform.position += velocity * moveSpeed * Time.deltaTime;
-
-//	velocity *= moveSpeed;
-//	velocity *= Time.deltaTime;
-
-//	transform.position += Vector3.right * velocity.x * moveSpeed * Time.deltaTime;
-//	transform.position += Vector3.forward * velocity.z * moveSpeed * Time.deltaTime;
-//	transform.position += Vector3.right * velocity.x;
-//	transform.position += Vector3.up * velocity.y;
-//	transform.position += Vector3.forward * velocity.z;
+	
+	transform.position += velocity;
 }
 
 /*
 void FixedUpdate()
 {
-	Vector3 newVelocity = new Vector3(velocity.x * moveSpeed, 0, velocity.y * moveSpeed);
-	newVelocity = Quaternion.Euler(0, 45, 0) * newVelocity;
-//		newVelocity = Quaternion.Euler(0, cam.transform.rotation.y, 0) * newVelocity;
-	rigidbody.AddForce(newVelocity);
+//	transform.position += velocity * moveSpeed * Time.deltaTime;
 }
 */
+
 //#################################################################################################
 
 void ClampVelocity()
 {
-	Vector3 newVelocity = velocity;
+	// set half-size of player-collider
+	float playerRadius = 0.125f;
+//	float playerRadius = player.collider.size.x;	// sth like that
+	
+	// set offset to the inside of the player to avoid overstepping
+	float insideOffset = 0.05f;
 
-	float extraDistance = 0.00000001f;
+	// set Rays per Direction
+	int rayCount = 5;
 
 	// vertical
-	float closestHit = Mathf.Abs(velocity.z) + extraDistance;
-	
-	//TODO: fix sub-optimal ray-testing!!! more rays? 
-	// HACK: maybe Euler(0,45,0) * Vector3.forward ???
+	float closestHit = Mathf.Abs(velocity.z) + insideOffset;
 	float sign = Mathf.Sign(velocity.z);
-	Ray rayZ = new Ray(transform.position + sign * Vector3.forward * 0.125f, sign * Vector3.forward);
-	RaycastHit hitZ = new RaycastHit();
-		
-	if(Physics.Raycast(rayZ, out hitZ, Mathf.Abs(velocity.z) + extraDistance))
+
+	for(int z = -rayCount+1; z < rayCount; z++)
 	{
-		closestHit = hitZ.distance;
+		Ray rayZ = new Ray(
+			transform.position + sign * Vector3.forward * (playerRadius - insideOffset) + Vector3.right * (z * playerRadius) / rayCount,
+			sign * Vector3.forward);
+		RaycastHit hitZ = new RaycastHit();
+		
+		if(Physics.Raycast(rayZ, out hitZ, Mathf.Abs(velocity.z) + insideOffset))
+		{
+//			if(hitZ.distance - insideOffset < closestHit)
+			if(hitZ.distance < closestHit)
+			{
+//				closestHit = hitZ.distance - insideOffset;
+				closestHit = hitZ.distance;
+			}
+		}
+
+
+		Debug.DrawLine(
+		transform.position + sign * Vector3.forward * (playerRadius - insideOffset) + Vector3.right * (z * playerRadius) / rayCount,
+		transform.position + sign * Vector3.forward * (playerRadius + closestHit - insideOffset) + Vector3.right * (z * playerRadius) / rayCount,
+		Color.magenta);
 	}
 
-	newVelocity.z = Mathf.Clamp(velocity.z, -closestHit, closestHit);
-	
-//	Gizmos.DrawLine(transform.position + sign * Vector3.forward * 0.125f,
-//			transform.position + sign * Vector3.forward * (0.125f + closestHit));
-	
+	if(Mathf.Abs(velocity.z) > 0.0f)
+	{
+		velocity.z = sign * (closestHit - insideOffset);
+	}
+
+//-----------------------------------------------------------------------------------------------
 
 	// horizontal
-	closestHit = Mathf.Abs(velocity.x) + extraDistance;
-		
+	closestHit = Mathf.Abs(velocity.x) + insideOffset;
 	sign = Mathf.Sign(velocity.x);
-	Ray rayX = new Ray(transform.position + sign * Vector3.right * 0.125f, sign * Vector3.right);
-	RaycastHit hitX = new RaycastHit();
-		
-	if(Physics.Raycast(rayX, out hitX, Mathf.Abs(velocity.x) + extraDistance))
+
+	for(int x = -rayCount+1; x < rayCount; x++)
 	{
-		closestHit = hitX.distance;
+		Ray rayX = new Ray(
+			transform.position + sign * Vector3.right * (playerRadius - insideOffset) + Vector3.forward * (x * playerRadius) / rayCount,
+			sign * Vector3.right);
+		RaycastHit hitX = new RaycastHit();
+		
+		if(Physics.Raycast(rayX, out hitX, Mathf.Abs(velocity.x) + insideOffset))
+		{
+			if(hitX.distance < closestHit)
+			{
+				closestHit = hitX.distance;
+			}
+		}
+
+		Debug.DrawLine(
+			transform.position + sign * Vector3.right * (playerRadius - insideOffset) + Vector3.forward * (x * playerRadius) / rayCount,
+				transform.position + sign * Vector3.right * (playerRadius + closestHit - insideOffset) + Vector3.forward * (x * playerRadius) / rayCount,
+			Color.cyan);
 	}
 
-	newVelocity.x = Mathf.Clamp(velocity.x, -closestHit, closestHit);
-
-//	Gizmos.DrawLine(transform.position + sign * Vector3.right * 0.125f,
-//		transform.position + sign * Vector3.right * (0.125f + closestHit));
-/*
-	// downwards
-	//TODO: rewrite code to only check for downwards
-	closestHit = Mathf.Abs(velocity.y);
-		
-	sign = Mathf.Sign(velocity.y);
-	Ray rayY = new Ray(transform.position + sign * Vector3.up * 0.25f, sign * Vector3.up);
-	RaycastHit hitY = new RaycastHit();
-		
-	if(Physics.Raycast(rayY, out hitY, Mathf.Abs(velocity.y) + 0.0001f))
+	if(Mathf.Abs(velocity.x) > 0.0f)
 	{
-		closestHit = hitY.distance;
+		velocity.x = sign * (closestHit - insideOffset);
 	}
-		
-	newVelocity.y = Mathf.Clamp(velocity.y, -closestHit, closestHit);
-
-//	Gizmos.DrawLine(transform.position + sign * Vector3.right * 0.125f,
-//		transform.position + sign * Vector3.right * (0.125f + closestHit));
-*/
-	velocity = newVelocity;
 }
 
 

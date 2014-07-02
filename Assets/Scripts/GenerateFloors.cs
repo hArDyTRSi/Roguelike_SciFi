@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class GenerateFloors : MonoBehaviour
 {
 
-public float TEST = 0.5f;
+//public float TEST = 0.5f;
 
 // TODO: make private
 public int actualFloor = 1;
@@ -35,9 +35,10 @@ Floor activeFloor = null;
 
 void Awake()
 {
+	// remove Floor (only needed for Editor-Tests, to not destroy a Test-Level chosen in Editor)
 	if(activeFloor != null)
 	{
-		RemoveLevel();
+		RemoveFloor();
 	}
 }
 
@@ -45,9 +46,11 @@ void Awake()
 void Start()
 {
 //	player = GameObject.FindGameObjectWithTag("Player");
+	
+	// Make a new Floor (if no Editor-Test-Level generated already!)
 	if(activeFloor != null)
 	{
-		MakeLevel();
+		MakeFloor();
 	}
 }
 /*	
@@ -59,10 +62,12 @@ void Update()
 //#################################################################################################
 
 
-public void RemoveLevel()
+public void RemoveFloor()
 {
+	// Remove all Lights
 	RemoveLightSources();
 
+	// Remove all Tile-Blocks
 	GameObject[] go = GameObject.FindGameObjectsWithTag("TileBlock");
 	foreach(GameObject g in go)
 	{
@@ -71,15 +76,15 @@ public void RemoveLevel()
 }
 
 
-public void MakeLevel()
+public void MakeFloor()
 {
-	RemoveLevel();
+	// Remove last Floor
+	RemoveFloor();
 
+	// Instantiate a new Floor
 	activeFloor = new Floor(floorSizeX, floorSizeZ);
 
-	// HACK: TEST!!!	
-//	activeFloor.blockMap[Random.Range(0, floorSizeX - 1), Random.Range(0, floorSizeZ - 1)] = 1;
-
+	// Instantiate new Tile-Blocks based on new Floor-Data
 	for(int x=0; x<floorSizeX; x++)
 	{
 		for(int z=0; z<floorSizeZ; z++)
@@ -104,6 +109,7 @@ public void MakeLevel()
 
 void MakeGround()
 {
+	// Instantiate flat Tile-Blocks under Rooms based on new Floor-Data
 	for(int x=0; x<floorSizeX; x++)
 	{
 		for(int z=0; z<floorSizeZ; z++)
@@ -123,6 +129,7 @@ void MakeGround()
 
 void SetPlayerPosition()
 {
+	// Find a Spot to spawn and reposition Player once found one
 	playerPositioned = false;
 	while(!playerPositioned)
 	{
@@ -132,7 +139,6 @@ void SetPlayerPosition()
 		if(activeFloor.blockMap[x, z] == 255)
 		{		
 			player.transform.position = new Vector3(x, 0.1f, z);
-//			player.rigidbody.velocity = new Vector3(0, 0, 0);
 			playerPositioned = true;
 		}
 	}
@@ -141,8 +147,10 @@ void SetPlayerPosition()
 
 void SetLightSources()
 {
+	// Instantiate Lights based on new Room-Data in new Floor-Data
 	foreach(Room r in activeFloor.rooms)
 	{
+		// one color of lights per room
 //		int lightColor = Random.Range(0, lightPrefabs.Length);
 
 		for(int p=0; p< r.lightsAmount; p++)
@@ -150,18 +158,20 @@ void SetLightSources()
 			int xOrZ = Random.Range(0, 2);
 			int lOrR = Random.Range(0, 2);
 
+			// every light has a random color
 			int lightColor = Random.Range(0, lightPrefabs.Length);
-
 
 			Vector3 lightPosition = 
 			new Vector3(
-				xOrZ == 0 ? Random.Range(r.offsetX + 0.5f, r.offsetX + r.sizeX - 0.5f) : lOrR == 0 ? r.offsetX - 0.5f : r.offsetX + r.sizeX - 0.5f,
-				0.25f,
-				xOrZ == 1 ? Random.Range(r.offsetZ + 0.5f, r.offsetZ + r.sizeZ - 0.5f) : lOrR == 0 ? r.offsetZ - 0.5f : r.offsetZ + r.sizeZ - 0.5f);
+				xOrZ == 0 ? Random.Range(r.offsetX + 0.6f, r.offsetX + r.sizeX - 0.6f) : lOrR == 0 ? r.offsetX - 0.4f : r.offsetX + r.sizeX - 0.6f,
+				0.0f,
+				xOrZ == 1 ? Random.Range(r.offsetZ + 0.6f, r.offsetZ + r.sizeZ - 0.6f) : lOrR == 0 ? r.offsetZ - 0.4f : r.offsetZ + r.sizeZ - 0.6f);
 
 			GameObject l = Instantiate(lightPrefabs[lightColor],
 				lightPosition,
 				Quaternion.identity) as GameObject;
+			
+			// Add new Light to List of Lights
 			lights.Add(l);
 		}
 	}
@@ -169,11 +179,13 @@ void SetLightSources()
 
 void RemoveLightSources()
 {
+	// Destroy all lights in List
 	foreach(GameObject l in lights)
 	{
 		DestroyImmediate(l);
 	}
-
+	
+	// Delete all entries on List
 	lights.Clear();
 }
 }
