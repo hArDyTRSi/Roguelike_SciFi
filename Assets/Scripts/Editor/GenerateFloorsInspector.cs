@@ -6,10 +6,6 @@ using UnityEngine;
 public class GenerateFloorsInspector : Editor
 {
 
-//-------------------------------------------------------------------------------------------------
-
-//#################################################################################################
-
 public override void OnInspectorGUI()
 {
 	DrawDefaultInspector();

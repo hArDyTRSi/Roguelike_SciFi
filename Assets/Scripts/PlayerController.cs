@@ -5,16 +5,20 @@ using System.Collections;
 //[ExecuteInEditMode]
 public class PlayerController : MonoBehaviour
 {
+//-------------------------------------------------------------------------------------------------
+//--- Public Fields
 
 public int moveSpeed = 100;
 
-//-------------------------------------------------------------------------------------------------
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//+++ Private Fields
 
 Vector3 velocity = Vector3.zero;
 
 //Camera cam;
 
 //#################################################################################################
+//### UnityEngine
 
 /*
 void Start()
@@ -32,7 +36,7 @@ void Update()
 
 	velocity *= moveSpeed;
 	velocity *= Time.deltaTime;
-
+	
 	ClampVelocity();
 	
 	transform.position += velocity;
@@ -45,7 +49,8 @@ void FixedUpdate()
 }
 */
 
-//#################################################################################################
+//****************************************************************************************************
+//*** Functions
 
 void ClampVelocity()
 {
@@ -59,68 +64,68 @@ void ClampVelocity()
 	// set Rays per Direction
 	int rayCount = 5;
 
-	// vertical
-	float closestHit = Mathf.Abs(velocity.z) + insideOffset;
-	float sign = Mathf.Sign(velocity.z);
-
-	for(int z = -rayCount+1; z < rayCount; z++)
+	if(Mathf.Abs(velocity.z) > 0.0f)
 	{
-		Ray rayZ = new Ray(
+		// vertical
+		float closestHit = Mathf.Abs(velocity.z) + insideOffset;
+		float sign = Mathf.Sign(velocity.z);
+
+		for(int z = -rayCount+1; z < rayCount; z++)
+		{
+			Ray rayZ = new Ray(
 			transform.position + sign * Vector3.forward * (playerRadius - insideOffset) + Vector3.right * (z * playerRadius) / rayCount,
 			sign * Vector3.forward);
-		RaycastHit hitZ = new RaycastHit();
+			RaycastHit hitZ = new RaycastHit();
 		
-		if(Physics.Raycast(rayZ, out hitZ, Mathf.Abs(velocity.z) + insideOffset))
-		{
-//			if(hitZ.distance - insideOffset < closestHit)
-			if(hitZ.distance < closestHit)
+			if(Physics.Raycast(rayZ, out hitZ, Mathf.Abs(velocity.z) + insideOffset))
 			{
+//			if(hitZ.distance - insideOffset < closestHit)
+				if(hitZ.distance < closestHit)
+				{
 //				closestHit = hitZ.distance - insideOffset;
-				closestHit = hitZ.distance;
+					closestHit = hitZ.distance;
+				}
 			}
-		}
 
 
-		Debug.DrawLine(
+			Debug.DrawLine(
 		transform.position + sign * Vector3.forward * (playerRadius - insideOffset) + Vector3.right * (z * playerRadius) / rayCount,
 		transform.position + sign * Vector3.forward * (playerRadius + closestHit - insideOffset) + Vector3.right * (z * playerRadius) / rayCount,
 		Color.magenta);
-	}
+		}
 
-	if(Mathf.Abs(velocity.z) > 0.0f)
-	{
 		velocity.z = sign * (closestHit - insideOffset);
 	}
 
 //-----------------------------------------------------------------------------------------------
 
-	// horizontal
-	closestHit = Mathf.Abs(velocity.x) + insideOffset;
-	sign = Mathf.Sign(velocity.x);
-
-	for(int x = -rayCount+1; x < rayCount; x++)
+	if(Mathf.Abs(velocity.x) > 0.0f)
 	{
-		Ray rayX = new Ray(
+		// horizontal
+		float closestHit = Mathf.Abs(velocity.x) + insideOffset;
+		float sign = Mathf.Sign(velocity.x);
+
+		for(int x = -rayCount+1; x < rayCount; x++)
+		{
+			Ray rayX = new Ray(
 			transform.position + sign * Vector3.right * (playerRadius - insideOffset) + Vector3.forward * (x * playerRadius) / rayCount,
 			sign * Vector3.right);
-		RaycastHit hitX = new RaycastHit();
+			RaycastHit hitX = new RaycastHit();
 		
-		if(Physics.Raycast(rayX, out hitX, Mathf.Abs(velocity.x) + insideOffset))
-		{
-			if(hitX.distance < closestHit)
+			if(Physics.Raycast(rayX, out hitX, Mathf.Abs(velocity.x) + insideOffset))
 			{
-				closestHit = hitX.distance;
+				if(hitX.distance < closestHit)
+				{
+					closestHit = hitX.distance;
+				}
 			}
-		}
 
-		Debug.DrawLine(
+			Debug.DrawLine(
 			transform.position + sign * Vector3.right * (playerRadius - insideOffset) + Vector3.forward * (x * playerRadius) / rayCount,
 				transform.position + sign * Vector3.right * (playerRadius + closestHit - insideOffset) + Vector3.forward * (x * playerRadius) / rayCount,
 			Color.cyan);
-	}
+		}
 
-	if(Mathf.Abs(velocity.x) > 0.0f)
-	{
 		velocity.x = sign * (closestHit - insideOffset);
 	}
 }

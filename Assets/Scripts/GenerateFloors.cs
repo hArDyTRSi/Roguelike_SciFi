@@ -1,16 +1,20 @@
-﻿using UnityEngine;
+﻿using UnityEditor;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+//[ExecuteInEditMode]
 public class GenerateFloors : MonoBehaviour
 {
+//-------------------------------------------------------------------------------------------------
+//--- Public Fields
 
 //public float TEST = 0.5f;
 
+public bool keepEditorLevel = true;
+
 // TODO: make private
-public int actualFloor = 1;
 public GameObject player;
-// 
 
 public int floorSizeX = 64;
 public int floorSizeZ = 64;
@@ -21,64 +25,50 @@ public GameObject groundBlock;
 public Material[] materials;
 public Material[] materialsGround;
 
-//TODO: check if List has to be public
-public List<GameObject> lights = new List<GameObject>();
 public GameObject[] lightPrefabs;
 
-//-------------------------------------------------------------------------------------------------
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//+++ Private Fields
 
 bool playerPositioned = false;
 //GameObject player = null;
+
 Floor activeFloor = null;
 
-//#################################################################################################
+public List<GameObject> lights = new List<GameObject>();
 
+//#################################################################################################
+//### UnityEngine
+/*
 void Awake()
 {
-	// remove Floor (only needed for Editor-Tests, to not destroy a Test-Level chosen in Editor)
-	if(activeFloor != null)
-	{
-		RemoveFloor();
-	}
-}
 
+}
+*/
 
 void Start()
 {
 //	player = GameObject.FindGameObjectWithTag("Player");
 	
 	// Make a new Floor (if no Editor-Test-Level generated already!)
-	if(activeFloor != null)
+	if(!keepEditorLevel)
 	{
 		MakeFloor();
 	}
 }
+
 /*	
 void Update()
 {
 	
 }
 */
-//#################################################################################################
-
-
-public void RemoveFloor()
-{
-	// Remove all Lights
-	RemoveLightSources();
-
-	// Remove all Tile-Blocks
-	GameObject[] go = GameObject.FindGameObjectsWithTag("TileBlock");
-	foreach(GameObject g in go)
-	{
-		DestroyImmediate(g);
-	}
-}
-
+//****************************************************************************************************
+//*** Functions
 
 public void MakeFloor()
 {
-	// Remove last Floor
+	// Remove last Floor (except theres an Editor-Test-Level generated already)
 	RemoveFloor();
 
 	// Instantiate a new Floor
@@ -103,10 +93,25 @@ public void MakeFloor()
 	SetPlayerPosition();
 
 	SetLightSources();
-
 }
 
 
+public void RemoveFloor()
+{
+	// Remove all Lights
+	RemoveLightSources();
+		
+	// Remove all Tile-Blocks
+	GameObject[] go = GameObject.FindGameObjectsWithTag("TileBlock");
+	foreach(GameObject g in go)
+	{
+		DestroyImmediate(g);
+	}
+		
+	activeFloor = null;
+}
+	
+	
 void MakeGround()
 {
 	// Instantiate flat Tile-Blocks under Rooms based on new Floor-Data
@@ -180,6 +185,18 @@ void SetLightSources()
 void RemoveLightSources()
 {
 	// Destroy all lights in List
+
+	//TODO: FIX Light Removal !
+/*	
+	GameObject[] lights = GameObject.FindGameObjectsWithTag("FloorLight");
+
+	foreach(GameObject l in lights)
+	{
+		Debug.Log(l.name);
+		DestroyImmediate(l);
+//		Destroy(l);
+	}
+*/
 	foreach(GameObject l in lights)
 	{
 		DestroyImmediate(l);
@@ -187,5 +204,7 @@ void RemoveLightSources()
 	
 	// Delete all entries on List
 	lights.Clear();
+
 }
+
 }
