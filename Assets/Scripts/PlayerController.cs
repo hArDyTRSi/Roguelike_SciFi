@@ -9,12 +9,16 @@ public class PlayerController : MonoBehaviour
 //--- Public Fields
 
 public int moveSpeed = 100;
+public int rotationSpeed = 100;
+
+public GameObject playerModel;
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++ Private Fields
 
 Vector3 velocity = Vector3.zero;
 
+//GameObject playerModel;
 //Camera cam;
 
 //#################################################################################################
@@ -24,6 +28,7 @@ Vector3 velocity = Vector3.zero;
 void Start()
 {
 //	cam = Camera.main;
+	playerModel = GameObject.FindGameObjectWithTag("PlayerModel");
 }
 */
 
@@ -40,6 +45,13 @@ void Update()
 	ClampVelocity();
 	
 	transform.position += velocity;
+
+	// Rotation
+	if(velocity != Vector3.zero)
+	{
+		playerModel.transform.rotation = Quaternion.Slerp(playerModel.transform.rotation, Quaternion.LookRotation(velocity), rotationSpeed * Time.deltaTime);
+	}
+
 }
 
 /*

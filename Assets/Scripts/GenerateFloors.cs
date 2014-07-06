@@ -84,6 +84,9 @@ public void MakeFloor()
 			{
 				GameObject tb = Instantiate(tileBlock, new Vector3(x, 0, z), Quaternion.identity) as GameObject;
 				tb.renderer.material = materials[tile];
+
+				// group as child into "LEVEL"-GameObject
+				tb.transform.parent = this.transform;
 			}
 		}
 	}
@@ -125,6 +128,9 @@ void MakeGround()
 				GameObject tb = Instantiate(groundBlock, new Vector3(x, -0.5f, z), Quaternion.identity) as GameObject;
 				tb.renderer.material = materialsGround[0];
 //				tb.renderer.material = materialsGround[(int)(actualFloor / 5)];
+
+				// group as child into "LEVEL"-GameObject
+				tb.transform.parent = this.transform;
 			}
 		}
 	}
@@ -175,7 +181,10 @@ void SetLightSources()
 			GameObject l = Instantiate(lightPrefabs[lightColor],
 				lightPosition,
 				Quaternion.identity) as GameObject;
-			
+
+			// group as child into "LEVEL"-GameObject
+			l.transform.parent = this.transform;
+
 			// Add new Light to List of Lights
 			lights.Add(l);
 		}
