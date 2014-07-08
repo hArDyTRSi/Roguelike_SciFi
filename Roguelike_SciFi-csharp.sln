@@ -1,6 +1,8 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2008
 
+Project("{EB453E22-D061-0278-0116-792614848383}") = "Roguelike_SciFi", "Assembly-CSharp-firstpass-vs.csproj", "{8740E4F2-4722-2438-063F-6A3FD303888F}"
+EndProject
 Project("{EB453E22-D061-0278-0116-792614848383}") = "Roguelike_SciFi", "Assembly-CSharp-vs.csproj", "{0FE532B4-99CB-E3BE-CE06-07C3FFA67DAE}"
 EndProject
 Project("{EB453E22-D061-0278-0116-792614848383}") = "Roguelike_SciFi", "Assembly-CSharp-Editor-vs.csproj", "{CC987A0C-1910-E6BE-B9D0-8E816D402E76}"
@@ -11,6 +13,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8740E4F2-4722-2438-063F-6A3FD303888F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8740E4F2-4722-2438-063F-6A3FD303888F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8740E4F2-4722-2438-063F-6A3FD303888F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8740E4F2-4722-2438-063F-6A3FD303888F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0FE532B4-99CB-E3BE-CE06-07C3FFA67DAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0FE532B4-99CB-E3BE-CE06-07C3FFA67DAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0FE532B4-99CB-E3BE-CE06-07C3FFA67DAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -23,7 +29,7 @@ Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-				GlobalSection(MonoDevelopProperties) = preSolution
+													GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Assembly-CSharp.csproj
 		Policies = $0
 		$0.TextStylePolicy = $1
