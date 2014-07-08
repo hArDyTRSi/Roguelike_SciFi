@@ -35,7 +35,10 @@ bool playerPositioned = false;
 
 Floor activeFloor = null;
 
-public List<GameObject> lights = new List<GameObject>();
+//public List<GameObject> lights = new List<GameObject>();
+List<GameObject> lights = new List<GameObject>();
+
+GameObject mapDisplay;
 
 //#################################################################################################
 //### UnityEngine
@@ -48,8 +51,13 @@ void Awake()
 
 void Start()
 {
+	//cache Player	
 //	player = GameObject.FindGameObjectWithTag("Player");
-	
+
+	// cache Map-Display
+//	mapDisplay = GameObject.FindGameObjectWithTag("MapDisplay").GetComponent<GUITexture>();
+	mapDisplay = GameObject.FindGameObjectWithTag("MapDisplay");
+
 	// Make a new Floor (if no Editor-Test-Level generated already!)
 	if(!keepEditorLevel)
 	{
@@ -96,6 +104,8 @@ public void MakeFloor()
 	SetPlayerPosition();
 
 	SetLightSources();
+
+	MakeMap();
 }
 
 
@@ -216,4 +226,42 @@ void RemoveLightSources()
 
 }
 
+
+void MakeMap()
+{
+	// make new color-array
+	Color[] colors = new Color[floorSizeX * floorSizeZ];
+	
+	// fill color-array according to map-data
+	for(int x=0; x<floorSizeX; x++)
+	{
+		for(int z=0; z<floorSizeZ; z++)
+		{
+			byte pixel = activeFloor.blockMap[x, z];
+			
+			colors[x + z * floorSizeX] =
+						pixel == 255 ? new Color(0.2f, 0.2f, 0.2f, 0.5f) :
+						pixel == 254 ? new Color(0.0f, 0.0f, 0.0f, 0.0f) :
+						new Color(1.0f, 1.0f, 1.0f, 0.5f);
+		}
+	}
+
+	// make new Texture and set its pixels
+	Texture2D newMap = new Texture2D(floorSizeX, floorSizeZ);
+	newMap.filterMode = FilterMode.Point;
+	newMap.SetPixels(colors);
+	newMap.Apply();
+
+	// set GUI-Texture
+//	mapDisplay.SetActive(true);
+	mapDisplay.guiTexture.pixelInset = new Rect(floorSizeX / 2, floorSizeZ / 2, floorSizeX, floorSizeZ);
+	mapDisplay.guiTexture.texture = newMap;
+	
+	// rescale and reposition according to Screen.resolution
+	mapDisplay.transform.position = new Vector3(0.5f, ((float)Screen.width / (float)Screen.height) * 0.25f, 0.0f);
+	mapDisplay.transform.localScale = new Vector3(0.5f, ((float)Screen.width / (float)Screen.height) * 0.5f, 0.0f);
+
+	// disabled as default
+	mapDisplay.SetActive(false);
+}
 }

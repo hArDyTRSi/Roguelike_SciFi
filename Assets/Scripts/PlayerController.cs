@@ -21,19 +21,52 @@ Vector3 velocity = Vector3.zero;
 //GameObject playerModel;
 //Camera cam;
 
+GameObject mapDisplay;
+GameObject playerDisplay;
+GenerateFloors floor;
+
 //#################################################################################################
 //### UnityEngine
 
-/*
+
 void Start()
 {
 //	cam = Camera.main;
-	playerModel = GameObject.FindGameObjectWithTag("PlayerModel");
+//	playerModel = GameObject.FindGameObjectWithTag("PlayerModel");
+
+	// cache Map-Display
+	mapDisplay = GameObject.FindGameObjectWithTag("MapDisplay");
+	playerDisplay = GameObject.FindGameObjectWithTag("PlayerDisplay");
+	playerDisplay.SetActive(false);
+	floor = GameObject.FindGameObjectWithTag("Level").GetComponent<GenerateFloors>();
 }
-*/
+
 
 void Update()
 {
+	// Map-Display
+	if(Input.GetButtonDown("Map"))
+	{
+		if(mapDisplay.activeSelf)
+		{
+			mapDisplay.SetActive(false);
+			playerDisplay.SetActive(false);
+		}
+		else
+		{
+			mapDisplay.SetActive(true);
+			playerDisplay.SetActive(true);
+		}
+	}
+
+	// TODO: fix this mess...this killed my brain after 2 hours of fiddling...no idea what i am doing wrong here! :/
+	// set player-position on Map
+	playerDisplay.transform.position = new Vector3(
+		0.2625f + (transform.position.x / (float)floor.floorSizeX) * ((float)Screen.height / (float)Screen.width),
+		0.025f + transform.position.z / (float)floor.floorSizeZ,
+		0.0f);
+
+	// PLAYER-Control
 //	velocity = new Vector3(Input.GetAxis("Horizontal"), -9.81f, Input.GetAxis("Vertical"));
 	velocity = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
 
@@ -99,11 +132,12 @@ void ClampVelocity()
 				}
 			}
 
-
-			Debug.DrawLine(
+/*
+		Debug.DrawLine(
 		transform.position + sign * Vector3.forward * (playerRadius - insideOffset) + Vector3.right * (z * playerRadius) / rayCount,
 		transform.position + sign * Vector3.forward * (playerRadius + closestHit - insideOffset) + Vector3.right * (z * playerRadius) / rayCount,
 		Color.magenta);
+*/
 		}
 
 		velocity.z = sign * (closestHit - insideOffset);
@@ -131,11 +165,12 @@ void ClampVelocity()
 					closestHit = hitX.distance;
 				}
 			}
-
+/*
 			Debug.DrawLine(
 			transform.position + sign * Vector3.right * (playerRadius - insideOffset) + Vector3.forward * (x * playerRadius) / rayCount,
 				transform.position + sign * Vector3.right * (playerRadius + closestHit - insideOffset) + Vector3.forward * (x * playerRadius) / rayCount,
 			Color.cyan);
+*/
 		}
 
 		velocity.x = sign * (closestHit - insideOffset);

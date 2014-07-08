@@ -51,8 +51,10 @@ void MakeFloor(int sizeX, int sizeZ)
 
 void MakeRooms()
 {
+	// make initial room
 	rooms.Add(new Room(sizeX, sizeZ));
-
+	
+	// make more rooms
 	for(int i=0; i<roomAmount-1; i++)
 	{
 		Room room = new Room(sizeX, sizeZ);
@@ -88,8 +90,6 @@ void MakeRooms()
 			}
 		}
 	}
-	//TODO: Add lights to room/scene
-
 }
 
 bool IsOverlapping(Room r)
@@ -133,6 +133,8 @@ void MakeConnections()
 
 void MakeCorridor(Room r1, Room r2)
 {
+	// TODO: fix, so no rooms are completely separated!
+
 	r1.isConnected = true;
 	r2.isConnected = true;
 
