@@ -69,8 +69,8 @@ void Update()
 	playerDisplay.transform.position = new Vector3(
 //	xOff + 0.5f + ((transform.position.x - floor.floorSizeX / 2.0f) / floor.floorSizeX) * xMul,
 //	xOff + 0.5f + ((transform.position.z - floor.floorSizeZ / 2.0f) / floor.floorSizeZ) * (Camera.main.aspect * xMul),
-	0.005f + 0.5f + ((transform.position.x - floor.floorSizeX / 2.0f) / floor.floorSizeX) * 0.545f,
-	0.005f + 0.5f + ((transform.position.z - floor.floorSizeZ / 2.0f) / floor.floorSizeZ) * (Camera.main.aspect * 0.545f),
+	0.005f + 0.5f + ((transform.position.x - floor.floorSizeX / 2.0f) / floor.floorSizeX) * 0.5425f,
+	0.005f + 0.5f + ((transform.position.z - floor.floorSizeZ / 2.0f) / floor.floorSizeZ) * (Camera.main.aspect * 0.5425f),
 	0.0f);
 
 	// PLAYER-Control

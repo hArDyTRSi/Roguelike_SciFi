@@ -27,6 +27,9 @@ public Material[] materialsGround;
 
 public GameObject[] lightPrefabs;
 
+public int enemieAmount = 25;
+public GameObject[] enemies;
+
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++ Private Fields
 
@@ -106,6 +109,8 @@ public void MakeFloor()
 	SetLightSources();
 
 	MakeMap();
+
+	PositionEnemies();
 }
 
 
@@ -265,4 +270,40 @@ void MakeMap()
 	// disabled as default
 	mapDisplay.SetActive(false);
 }
+
+
+void PositionEnemies()
+{
+	List<int> spawnSlots = new List<int>();
+
+	for(int x=0; x<floorSizeX; x++)
+	{
+		for(int z=0; z<floorSizeZ; z++)
+		{
+			byte tile = activeFloor.blockMap[x, z];
+
+			if(tile == 255)
+			{
+				spawnSlots.Add(x);
+				spawnSlots.Add(z);
+			}
+		}
+	}
+	
+	// spawn Enemies on free slots
+	for(int s=0; s<enemieAmount; s++)
+	{
+		int random = Random.Range(0, spawnSlots.Count / 2);
+
+		GameObject e = Instantiate(enemies[0], new Vector3(spawnSlots[random * 2], 0, spawnSlots[random * 2 + 1]), Quaternion.identity) as GameObject;
+		e.transform.parent = this.transform;
+
+		// remove used slots from List, so no enemies spawn on the same position
+		spawnSlots.Remove(random * 2 + 1);
+		spawnSlots.Remove(random * 2);
+	}
+	
+}
+
+
 }

@@ -14,6 +14,9 @@ public int offsetZ;
 public int pillarAmount;
 public int[,] pillarPositions;
 
+//public int enemiesAmount;
+//public int[,] enemiesPositions;
+
 public bool isConnected = false;
 
 public int lightsAmount;
@@ -37,6 +40,7 @@ public Room(int floorSizeX, int floorSizeZ)
 	offsetZ = Random.Range(1, floorSizeZ - sizeZ);
 	lightsAmount = Random.Range(0, 4);
 	pillarAmount = Random.Range(0, (int)((sizeX * sizeZ) / 10));
+//	enemiesAmount = Random.Range(0, (int)((sizeX * sizeZ) / 10));
 
 	pillarPositions = new int[pillarAmount, 2];
 	for(int p=0; p< pillarAmount; p++)
