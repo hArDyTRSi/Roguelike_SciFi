@@ -254,12 +254,13 @@ void MakeMap()
 
 	// set GUI-Texture
 //	mapDisplay.SetActive(true);
-	mapDisplay.guiTexture.pixelInset = new Rect(floorSizeX / 2, floorSizeZ / 2, floorSizeX, floorSizeZ);
+	mapDisplay.guiTexture.pixelInset = new Rect(-floorSizeX / 2, -floorSizeZ / 2, floorSizeX, floorSizeZ);
 	mapDisplay.guiTexture.texture = newMap;
 	
 	// rescale and reposition according to Screen.resolution
-	mapDisplay.transform.position = new Vector3(0.5f, ((float)Screen.width / (float)Screen.height) * 0.25f, 0.0f);
-	mapDisplay.transform.localScale = new Vector3(0.5f, ((float)Screen.width / (float)Screen.height) * 0.5f, 0.0f);
+//	mapDisplay.transform.localScale = new Vector3(((float)Screen.height / (float)Screen.width) * 0.9f, 0.9f, 0.0f);
+	mapDisplay.transform.localScale = new Vector3(0.5f, Camera.main.aspect * 0.5f, 0.0f);
+//	mapDisplay.transform.position = new Vector3(0.5f, 1.0f - (float)Screen.height / (float)Screen.width, 0.0f);
 
 	// disabled as default
 	mapDisplay.SetActive(false);

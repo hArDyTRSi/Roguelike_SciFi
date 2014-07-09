@@ -8,6 +8,11 @@ public class PlayerController : MonoBehaviour
 //-------------------------------------------------------------------------------------------------
 //--- Public Fields
 
+//TODO: remove!
+//public float xOff;
+//public float xMul;
+
+
 public int moveSpeed = 100;
 public int rotationSpeed = 100;
 
@@ -59,12 +64,14 @@ void Update()
 		}
 	}
 
-	// TODO: fix this mess...this killed my brain after 2 hours of fiddling...no idea what i am doing wrong here! :/
+	//TODO: check for errors in other ratios, strange numbers here, where do they come from?
 	// set player-position on Map
 	playerDisplay.transform.position = new Vector3(
-		0.2625f + (transform.position.x / (float)floor.floorSizeX) * ((float)Screen.height / (float)Screen.width),
-		0.025f + transform.position.z / (float)floor.floorSizeZ,
-		0.0f);
+//	xOff + 0.5f + ((transform.position.x - floor.floorSizeX / 2.0f) / floor.floorSizeX) * xMul,
+//	xOff + 0.5f + ((transform.position.z - floor.floorSizeZ / 2.0f) / floor.floorSizeZ) * (Camera.main.aspect * xMul),
+	0.005f + 0.5f + ((transform.position.x - floor.floorSizeX / 2.0f) / floor.floorSizeX) * 0.545f,
+	0.005f + 0.5f + ((transform.position.z - floor.floorSizeZ / 2.0f) / floor.floorSizeZ) * (Camera.main.aspect * 0.545f),
+	0.0f);
 
 	// PLAYER-Control
 //	velocity = new Vector3(Input.GetAxis("Horizontal"), -9.81f, Input.GetAxis("Vertical"));
