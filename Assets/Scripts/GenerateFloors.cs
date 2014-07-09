@@ -27,7 +27,7 @@ public Material[] materialsGround;
 
 public GameObject[] lightPrefabs;
 
-public int enemieAmount = 25;
+public int enemyAmount = 25;
 public GameObject[] enemies;
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -52,7 +52,8 @@ void Awake()
 }
 */
 
-void Start()
+void Awake()
+//void Start()
 {
 	//cache Player	
 //	player = GameObject.FindGameObjectWithTag("Player");
@@ -280,10 +281,19 @@ void PositionEnemies()
 	{
 		for(int z=0; z<floorSizeZ; z++)
 		{
+/*			if(Vector3.Distance(player.transform.position, new Vector3(x, 0.0f, z)) < 2.5f)
+			{
+				continue;
+			}
+*/
 			byte tile = activeFloor.blockMap[x, z];
 
 			if(tile == 255)
 			{
+				if(Vector3.Distance(player.transform.position, new Vector3(x, 0.0f, z)) < 5.0f)
+				{
+					continue;
+				}
 				spawnSlots.Add(x);
 				spawnSlots.Add(z);
 			}
@@ -291,11 +301,29 @@ void PositionEnemies()
 	}
 	
 	// spawn Enemies on free slots
-	for(int s=0; s<enemieAmount; s++)
+	for(int s=0; s<enemyAmount; s++)
 	{
-		int random = Random.Range(0, spawnSlots.Count / 2);
+		
+/*
+		int random;
 
-		GameObject e = Instantiate(enemies[0], new Vector3(spawnSlots[random * 2], 0, spawnSlots[random * 2 + 1]), Quaternion.identity) as GameObject;
+		// initialize with position close to the player
+		Vector3 spawnPos = player.transform.position + Vector3.forward;
+
+		while(Vector3.Distance(player.transform.position, spawnPos) < 2.5f)
+		{
+		random = Random.Range(0, spawnSlots.Count / 2);
+
+		spawnPos = new Vector3(spawnSlots[random * 2], 0, spawnSlots[random * 2 + 1]);
+		}
+*/
+		int random = Random.Range(0, spawnSlots.Count / 2);
+			
+		Vector3 spawnPos = new Vector3(spawnSlots[random * 2], 0, spawnSlots[random * 2 + 1]);
+		
+		int randEnemy = Random.Range(0, enemies.Length);
+
+		GameObject e = Instantiate(enemies[randEnemy], spawnPos, Quaternion.identity) as GameObject;
 		e.transform.parent = this.transform;
 
 		// remove used slots from List, so no enemies spawn on the same position
