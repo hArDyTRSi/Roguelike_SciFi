@@ -12,12 +12,14 @@ public class PlayerController : MonoBehaviour
 //public float xOff;
 //public float xMul;
 
-public bool mapOpened = false;
+//public bool mapOpened = false;
 
 public int moveSpeed = 100;
 public int rotationSpeed = 100;
 
 public GameObject mapDisplayPlayer;
+public Color displayActiveColor;
+public Color displayInactiveColor;
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++ Private Fields
@@ -28,9 +30,10 @@ Vector3 velocity = Vector3.zero;
 
 GameObject mapDisplay;
 GameObject playerDisplay;
+GUITexture playerDisplayGUITexture = null;
 GameObject playerModel;
 
-GenerateFloors floor;
+//GenerateFloors floor;
 
 GameObject mapDisplayParent;
 
@@ -54,10 +57,16 @@ void Start()
 //	playerDisplay = GameObject.FindGameObjectWithTag("PlayerDisplay");
 	playerDisplay = Instantiate(mapDisplayPlayer) as GameObject;
 	playerDisplay.transform.parent = mapDisplayParent.transform;
-	playerDisplay.SetActive(false);
+//	playerDisplay.SetActive(false);
+
+	// cache GUITexture component from mobDisplay
+	playerDisplayGUITexture = playerDisplay.GetComponent<GUITexture>();
+	// set color to transparent (Minimap off at Startup)
+	playerDisplayGUITexture.color = displayInactiveColor;
+
 
 	// cache level
-	floor = GameObject.FindGameObjectWithTag("Level").GetComponent<GenerateFloors>();
+//	floor = GameObject.FindGameObjectWithTag("Level").GetComponent<GenerateFloors>();
 }
 
 
@@ -66,30 +75,47 @@ void Update()
 	// Map-Display
 	if(Input.GetButtonDown("Map"))
 	{
-		mapOpened = !mapOpened;
+//		mapOpened = !mapOpened;
 
-		if(mapDisplay.activeSelf)
+//		if(mapDisplay.activeSelf)
+		if(Global.global.mapOpened)
+//		if(mapOpened)
 		{
 			mapDisplay.SetActive(false);
-			playerDisplay.SetActive(false);
+//			playerDisplay.SetActive(false);
+			playerDisplayGUITexture.color = displayInactiveColor;
+			Global.global.mapOpened = false;
+//			mapOpened = false;
+
 		}
 		else
 		{
 			mapDisplay.SetActive(true);
-			playerDisplay.SetActive(true);
+//			playerDisplay.SetActive(true);
+			playerDisplayGUITexture.color = displayActiveColor;
+			Global.global.mapOpened = true;
+//			mapOpened = true;
 		}
 	}
 
 	//TODO: check for errors in other ratios, strange numbers here, where do they come from?
-	// set player-position on Map
-	playerDisplay.transform.position = new Vector3(
-//	xOff + 0.5f + ((transform.position.x - floor.floorSizeX / 2.0f) / floor.floorSizeX) * xMul,
-//	xOff + 0.5f + ((transform.position.z - floor.floorSizeZ / 2.0f) / floor.floorSizeZ) * (Camera.main.aspect * xMul),
-	0.005f + 0.5f + ((transform.position.x - floor.floorSizeX / 2.0f) / floor.floorSizeX) * 0.5425f,
-	0.005f + 0.5f + ((transform.position.z - floor.floorSizeZ / 2.0f) / floor.floorSizeZ) * (Camera.main.aspect * 0.5425f),
-	0.0f);
+	if(Global.global.mapOpened)
+//	if(mapOpened)
+	{
+		// set player-position on Map
+		playerDisplay.transform.position = new Vector3(
+//			xOff + 0.5f + ((transform.position.x - Global.global.floorSizeX / 2.0f) / Global.global.floorSizeX) * xMul,
+//			xOff + 0.5f + ((transform.position.z - Global.global.floorSizeZ / 2.0f) / Global.global.floorSizeZ) * (Camera.main.aspect * xMul),
+			0.005f + 0.5f + ((transform.position.x - Global.global.floorSizeX / 2.0f) / Global.global.floorSizeX) * 0.5425f,
+			0.005f + 0.5f + ((transform.position.z - Global.global.floorSizeZ / 2.0f) / Global.global.floorSizeZ) * (Camera.main.aspect * 0.5425f),
+			0.0f);
+	}
+
+
+//-----------------------------------------------------------------------------------------------
 
 	// PLAYER-Control
+
 //	velocity = new Vector3(Input.GetAxis("Horizontal"), -9.81f, Input.GetAxis("Vertical"));
 	velocity = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
 

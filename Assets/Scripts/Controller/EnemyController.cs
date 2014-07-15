@@ -14,6 +14,8 @@ public float outOfRangeDistance = 5.0f;
 
 public GameObject mapDisplayMob;
 
+public Color displayActiveColor;
+public Color displayInactiveColor;
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++ Private Fields
@@ -25,11 +27,13 @@ float moveSpeed;
 Transform model;
 
 GameObject player;
-PlayerController playerController;
+//PlayerController playerController;
 
+bool mobDisplayActive = false;
 GameObject mobDisplay;
+GUITexture mobDisplayGUITexture = null;
 
-GenerateFloors floor;
+//GenerateFloors floor;
 
 GameObject mapDisplayParent;
 
@@ -41,10 +45,8 @@ void Start()
 	// cache Player
 	player = GameObject.FindGameObjectWithTag("Player");
 
-	playerController = player.GetComponent<PlayerController>();
-
-	// Look at Player at Startup
-//	transform.LookAt(player.transform.position);
+	// cache PlayerController
+//	playerController = player.GetComponent<PlayerController>();
 
 	// cache child to trigger animations
 	model = transform.GetChild(0);
@@ -59,11 +61,16 @@ void Start()
 //	mobDisplay = GameObject.FindGameObjectWithTag("PlayerDisplay");
 	mobDisplay = Instantiate(mapDisplayMob) as GameObject;
 	mobDisplay.transform.parent = mapDisplayParent.transform;
-	mobDisplay.SetActive(false);
+//	mobDisplay.SetActive(false);
+
+	// cache GUITexture component from mobDisplay
+	mobDisplayGUITexture = mobDisplay.GetComponent<GUITexture>();
+	// set color to transparent (Minimap off at Startup)
+	mobDisplayGUITexture.color = displayInactiveColor;
+
 
 	// cache level
-	floor = GameObject.FindGameObjectWithTag("Level").GetComponent<GenerateFloors>();
-
+//	floor = GameObject.FindGameObjectWithTag("Level").GetComponent<GenerateFloors>();
 
 }
 
@@ -71,47 +78,69 @@ void Start()
 void Update()
 {
 
+	// ATTACK Mode
 	if(attackPlayer)
 	{
 		// get distance to Player
 		float distToPlayer = Vector3.Distance(transform.position, player.transform.position);
 
-		// stop moving if Player is too far away (feige Sau, da!)
+		// stop moving if Player is too far away (player escaped)
 		if(distToPlayer >= outOfRangeDistance)
 		{
+			// deactivate Mob-Display on Minimap
+			if(mobDisplayActive)
+			{
+//				mobDisplay.SetActive(false);
+				mobDisplayGUITexture.color = displayInactiveColor;
+				mobDisplayActive = false;
+			}
+
 			attackPlayer = false;
 			model.animation.Stop();
-
-			// deactivate Mob-Display on Minimap
-			mobDisplay.SetActive(false);
 
 			return;
 		}
 
-		if(playerController.mapOpened)
+		if(Global.global.mapOpened)
+//		if(playerController.mapOpened)
 		{
 			// activate Mob-Display on Minimap
-			mobDisplay.SetActive(true);
+			if(!mobDisplayActive)
+			{
+//				mobDisplay.SetActive(true);
+				mobDisplayGUITexture.color = displayActiveColor;
+				mobDisplayActive = true;
+			}
 
 			//TODO: check for errors in other ratios, strange numbers here, where do they come from?
 			// set mob-position on Map
 			mobDisplay.transform.position = new Vector3(
-				//	xOff + 0.5f + ((transform.position.x - floor.floorSizeX / 2.0f) / floor.floorSizeX) * xMul,
-				//	xOff + 0.5f + ((transform.position.z - floor.floorSizeZ / 2.0f) / floor.floorSizeZ) * (Camera.main.aspect * xMul),
-				0.005f + 0.5f + ((transform.position.x - floor.floorSizeX / 2.0f) / floor.floorSizeX) * 0.5425f,
-				0.005f + 0.5f + ((transform.position.z - floor.floorSizeZ / 2.0f) / floor.floorSizeZ) * (Camera.main.aspect * 0.5425f),
+				//	xOff + 0.5f + ((transform.position.x - Global.global.floorSizeX / 2.0f) / Global.global.floorSizeX) * xMul,
+				//	xOff + 0.5f + ((transform.position.z - Global.global.floorSizeZ / 2.0f) / Global.global.floorSizeZ) * (Camera.main.aspect * xMul),
+				0.005f + 0.5f + ((transform.position.x - Global.global.floorSizeX / 2.0f) / Global.global.floorSizeX) * 0.5425f,
+				0.005f + 0.5f + ((transform.position.z - Global.global.floorSizeZ / 2.0f) / Global.global.floorSizeZ) * (Camera.main.aspect * 0.5425f),
 				0.0f);
 		}
 		else
 		{
-			mobDisplay.SetActive(false);
+			// deactivate mobDisplay on MiniMap
+			if(mobDisplayActive)
+			{
+//				mobDisplay.SetActive(false);
+				mobDisplayGUITexture.color = displayInactiveColor;
+				mobDisplayActive = false;
+			}
 		}
 
 
+//-----------------------------------------------------------------------------------------------
+
+		// MOB-Control
 
 		// avoid rotation on z-axis
 		Vector3 antiRotatePosition = new Vector3(transform.position.x, 0.0f, transform.position.z);
 		Vector3 antiRotatePositionPlayer = new Vector3(player.transform.position.x, 0.0f, player.transform.position.z);
+
 		// Look at Player
 		transform.rotation = Quaternion.Slerp(
 				transform.rotation,
@@ -121,13 +150,13 @@ void Update()
 				rotateSpeed * Time.deltaTime
 		);
 
-		//TODO: remove RigidBodies and test for Walls as with the player! RayCasts....
 		//move towards player
 		if(distToPlayer > closestDistance)
 		{
 			transform.position -= (transform.position - player.transform.position).normalized * moveSpeed * Time.deltaTime;
 		}
 
+		//TODO: remove RigidBodies and test for Walls as with the player! RayCasts....
 		//HACK: keep model at the same height-level! (workaround for rigidbody-issues!)
 		model.transform.position = new Vector3(model.transform.position.x, 0.0f, model.transform.position.z);
 
@@ -136,15 +165,12 @@ void Update()
 }
 
 
-void OnTriggerEnter(Collider c)
+void OnTriggerEnter(Collider collider)
 {
-	if(c.tag == "AttackRadius")
+	if(collider.tag == "AttackRadius")
 	{
 		attackPlayer = true;
 		model.animation.Play();
-
-		// activate Mob-Display on Minimap
-//		mobDisplay.SetActive(true);
 	}
 }
 

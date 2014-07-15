@@ -16,8 +16,8 @@ public bool keepEditorLevel = true;
 // TODO: make private
 public GameObject player;
 
-public int floorSizeX = 64;
-public int floorSizeZ = 64;
+//public int Global.global.floorSizeX = 64;
+//public int Global.global.floorSizeZ = 64;
 
 public GameObject tileBlock;
 public GameObject groundBlock;
@@ -84,12 +84,12 @@ public void MakeFloor()
 	RemoveFloor();
 
 	// Instantiate a new Floor
-	activeFloor = new Floor(floorSizeX, floorSizeZ);
+	activeFloor = new Floor(Global.global.floorSizeX, Global.global.floorSizeZ);
 
 	// Instantiate new Tile-Blocks based on new Floor-Data
-	for(int x=0; x<floorSizeX; x++)
+	for(int x=0; x<Global.global.floorSizeX; x++)
 	{
-		for(int z=0; z<floorSizeZ; z++)
+		for(int z=0; z<Global.global.floorSizeZ; z++)
 		{
 			byte tile = activeFloor.blockMap[x, z];
 			if(tile < 254)
@@ -134,9 +134,9 @@ public void RemoveFloor()
 void MakeGround()
 {
 	// Instantiate flat Tile-Blocks under Rooms based on new Floor-Data
-	for(int x=0; x<floorSizeX; x++)
+	for(int x=0; x<Global.global.floorSizeX; x++)
 	{
-		for(int z=0; z<floorSizeZ; z++)
+		for(int z=0; z<Global.global.floorSizeZ; z++)
 		{
 			byte tile = activeFloor.blockMap[x, z];
 			if(tile == 255)
@@ -160,8 +160,8 @@ void SetPlayerPosition()
 	playerPositioned = false;
 	while(!playerPositioned)
 	{
-		int x = Random.Range(1, floorSizeX);
-		int z = Random.Range(1, floorSizeZ);
+		int x = Random.Range(1, Global.global.floorSizeX);
+		int z = Random.Range(1, Global.global.floorSizeZ);
 
 		if(activeFloor.blockMap[x, z] == 255)
 		{		
@@ -236,16 +236,16 @@ void RemoveLightSources()
 void MakeMap()
 {
 	// make new color-array
-	Color[] colors = new Color[floorSizeX * floorSizeZ];
+	Color[] colors = new Color[Global.global.floorSizeX * Global.global.floorSizeZ];
 	
 	// fill color-array according to map-data
-	for(int x=0; x<floorSizeX; x++)
+	for(int x=0; x<Global.global.floorSizeX; x++)
 	{
-		for(int z=0; z<floorSizeZ; z++)
+		for(int z=0; z<Global.global.floorSizeZ; z++)
 		{
 			byte pixel = activeFloor.blockMap[x, z];
 			
-			colors[x + z * floorSizeX] =
+			colors[x + z * Global.global.floorSizeX] =
 						pixel == 255 ? new Color(0.2f, 0.2f, 0.2f, 0.5f) :
 						pixel == 254 ? new Color(0.0f, 0.0f, 0.0f, 0.0f) :
 						new Color(1.0f, 1.0f, 1.0f, 0.5f);
@@ -253,14 +253,14 @@ void MakeMap()
 	}
 
 	// make new Texture and set its pixels
-	Texture2D newMap = new Texture2D(floorSizeX, floorSizeZ);
+	Texture2D newMap = new Texture2D(Global.global.floorSizeX, Global.global.floorSizeZ);
 	newMap.filterMode = FilterMode.Point;
 	newMap.SetPixels(colors);
 	newMap.Apply();
 
 	// set GUI-Texture
 //	mapDisplay.SetActive(true);
-	mapDisplay.guiTexture.pixelInset = new Rect(-floorSizeX / 2, -floorSizeZ / 2, floorSizeX, floorSizeZ);
+	mapDisplay.guiTexture.pixelInset = new Rect(-Global.global.floorSizeX / 2, -Global.global.floorSizeZ / 2, Global.global.floorSizeX, Global.global.floorSizeZ);
 	mapDisplay.guiTexture.texture = newMap;
 	
 	// rescale and reposition according to Screen.resolution
@@ -277,9 +277,9 @@ void PositionEnemies()
 {
 	List<int> spawnSlots = new List<int>();
 
-	for(int x=0; x<floorSizeX; x++)
+	for(int x=0; x<Global.global.floorSizeX; x++)
 	{
-		for(int z=0; z<floorSizeZ; z++)
+		for(int z=0; z<Global.global.floorSizeZ; z++)
 		{
 /*			if(Vector3.Distance(player.transform.position, new Vector3(x, 0.0f, z)) < 2.5f)
 			{
