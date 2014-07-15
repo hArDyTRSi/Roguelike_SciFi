@@ -269,7 +269,7 @@ void MakeMap()
 //	mapDisplay.transform.position = new Vector3(0.5f, 1.0f - (float)Screen.height / (float)Screen.width, 0.0f);
 
 	// disabled as default
-	mapDisplay.SetActive(false);
+//	mapDisplay.SetActive(false);
 }
 
 

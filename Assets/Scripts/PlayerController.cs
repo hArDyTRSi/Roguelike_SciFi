@@ -12,37 +12,51 @@ public class PlayerController : MonoBehaviour
 //public float xOff;
 //public float xMul;
 
+public bool mapOpened = false;
 
 public int moveSpeed = 100;
 public int rotationSpeed = 100;
 
-public GameObject playerModel;
+public GameObject mapDisplayPlayer;
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++ Private Fields
 
 Vector3 velocity = Vector3.zero;
 
-//GameObject playerModel;
 //Camera cam;
 
 GameObject mapDisplay;
 GameObject playerDisplay;
+GameObject playerModel;
+
 GenerateFloors floor;
+
+GameObject mapDisplayParent;
+
 
 //#################################################################################################
 //### UnityEngine
 
-
 void Start()
 {
 //	cam = Camera.main;
-//	playerModel = GameObject.FindGameObjectWithTag("PlayerModel");
+	playerModel = GameObject.FindGameObjectWithTag("PlayerModel");
 
 	// cache Map-Display
 	mapDisplay = GameObject.FindGameObjectWithTag("MapDisplay");
-	playerDisplay = GameObject.FindGameObjectWithTag("PlayerDisplay");
+	mapDisplay.SetActive(false);
+
+	// cache Parent-GameObject (folder) for instantiated playerDisplay
+	mapDisplayParent = GameObject.FindGameObjectWithTag("GUI");
+
+	// Instantiate and cache mapDisplay of Player
+//	playerDisplay = GameObject.FindGameObjectWithTag("PlayerDisplay");
+	playerDisplay = Instantiate(mapDisplayPlayer) as GameObject;
+	playerDisplay.transform.parent = mapDisplayParent.transform;
 	playerDisplay.SetActive(false);
+
+	// cache level
 	floor = GameObject.FindGameObjectWithTag("Level").GetComponent<GenerateFloors>();
 }
 
@@ -52,6 +66,8 @@ void Update()
 	// Map-Display
 	if(Input.GetButtonDown("Map"))
 	{
+		mapOpened = !mapOpened;
+
 		if(mapDisplay.activeSelf)
 		{
 			mapDisplay.SetActive(false);
