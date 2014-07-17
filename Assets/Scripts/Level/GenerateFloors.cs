@@ -212,16 +212,16 @@ void RemoveLightSources()
 	// Destroy all lights in List
 
 	//TODO: FIX Light Removal !
-/*	
-	GameObject[] lights = GameObject.FindGameObjectsWithTag("FloorLight");
+	
+	GameObject[] floorLights = GameObject.FindGameObjectsWithTag("FloorLight");
 
-	foreach(GameObject l in lights)
+	foreach(GameObject l in floorLights)
 	{
-		Debug.Log(l.name);
+//		Debug.Log(l.name);
 		DestroyImmediate(l);
 //		Destroy(l);
 	}
-*/
+/*
 	foreach(GameObject l in lights)
 	{
 		DestroyImmediate(l);
@@ -229,7 +229,7 @@ void RemoveLightSources()
 	
 	// Delete all entries on List
 	lights.Clear();
-
+*/
 }
 
 

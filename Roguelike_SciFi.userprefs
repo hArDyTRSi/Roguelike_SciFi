@@ -1,13 +1,14 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Controller\PlayerController.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Controller\EnemyController.cs">
     <Files>
-      <File FileName="Assets\Scripts\Global.cs" Line="17" Column="1" />
-      <File FileName="Assets\Scripts\Controller\PlayerController.cs" Line="98" Column="4" />
-      <File FileName="Assets\Scripts\Controller\EnemyController.cs" Line="95" Column="1" />
-      <File FileName="Assets\Scripts\Level\GenerateFloors.cs" Line="85" Column="1" />
+      <File FileName="Assets\Scripts\Editor\GenerateFloorsInspector.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Global.cs" Line="9" Column="29" />
+      <File FileName="Assets\Scripts\Controller\PlayerController.cs" Line="247" Column="1" />
+      <File FileName="Assets\Scripts\Controller\EnemyController.cs" Line="90" Column="1" />
+      <File FileName="Assets\Scripts\Level\GenerateFloors.cs" Line="207" Column="1" />
       <File FileName="Assets\Scripts\Level\Room.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Level\Floor.cs" Line="17" Column="15" />
+      <File FileName="Assets\Scripts\Level\Floor.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -15,9 +16,14 @@
           <Node name="Assembly-CSharp" expanded="True">
             <Node name="Scripts" expanded="True">
               <Node name="Controller" expanded="True">
-                <Node name="PlayerController.cs" selected="True" />
+                <Node name="EnemyController.cs" selected="True" />
               </Node>
               <Node name="Level" expanded="True" />
+            </Node>
+          </Node>
+          <Node name="Assembly-CSharp-Editor" expanded="True">
+            <Node name="Scripts" expanded="True">
+              <Node name="Editor" expanded="True" />
             </Node>
           </Node>
         </State>

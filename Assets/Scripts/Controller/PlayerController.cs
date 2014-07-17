@@ -153,7 +153,11 @@ void ClampVelocity()
 //	float playerRadius = player.collider.size.x;	// sth like that
 	
 	// set offset to the inside of the player to avoid overstepping
-	float insideOffset = 0.05f;
+	float insideOffset = 0.1f;
+
+	// set minimum offset to objects
+	float minDist = 0.001f;
+
 
 	// set Rays per Direction
 	int rayCount = 5;
@@ -188,8 +192,16 @@ void ClampVelocity()
 		Color.magenta);
 */
 		}
+		
 
-		velocity.z = sign * (closestHit - insideOffset);
+		velocity.z = Mathf.Clamp(sign * (closestHit - insideOffset), -closestHit + minDist, closestHit - minDist);
+//		velocity.z = sign * Mathf.Clamp(closestHit - insideOffset, 0.0f, closestHit - minDist);
+//		velocity.z = sign * (closestHit - insideOffset);
+//		if(sign * closestHit < minDist)
+//		{
+//			velocity.z -= sign * minDist;
+//		}
+
 	}
 
 //-----------------------------------------------------------------------------------------------
@@ -222,7 +234,14 @@ void ClampVelocity()
 */
 		}
 
-		velocity.x = sign * (closestHit - insideOffset);
+		velocity.x = Mathf.Clamp(sign * (closestHit - insideOffset), -closestHit + minDist, closestHit - minDist);
+//		velocity.x = sign * Mathf.Clamp(closestHit - insideOffset, 0.0f, closestHit - minDist);
+//		velocity.x = sign * (closestHit - insideOffset);
+//		if(closestHit < minDist)
+//		{
+//			velocity.x -= sign * minDist;
+//		}
+
 	}
 }
 
