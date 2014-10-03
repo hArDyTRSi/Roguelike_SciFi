@@ -1,39 +1,12 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Light_Flickering.cs">
+  <MonoDevelop.Ide.Workspace />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Controller\PlayerController.cs">
     <Files>
-      <File FileName="Assets\Light_Flickering.cs" Line="32" Column="1" />
-      <File FileName="Assets\Scripts\Editor\GenerateFloorsInspector.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Global.cs" Line="9" Column="29" />
       <File FileName="Assets\Scripts\Controller\PlayerController.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Controller\EnemyController.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Level\GenerateFloors.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Level\Room.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Level\Floor.cs" Line="1" Column="1" />
     </Files>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State expanded="True">
-          <Node name="Assembly-CSharp" expanded="True">
-            <Node name="Scripts" expanded="True">
-              <Node name="Controller" expanded="True" />
-              <Node name="Level" expanded="True" />
-            </Node>
-            <Node name="Light_Flickering.cs" selected="True" />
-          </Node>
-          <Node name="Assembly-CSharp-Editor" expanded="True">
-            <Node name="Scripts" expanded="True">
-              <Node name="Editor" expanded="True" />
-            </Node>
-          </Node>
-        </State>
-      </Pad>
-    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
-  <MonoDevelop.Ide.DebuggingService.PinnedWatches>
-    <Watch file="Assets\Scripts\GenerateFloors.cs" line="254" offsetX="641" offsetY="8096" expression="mapDisplay" liveUpdate="False" />
-  </MonoDevelop.Ide.DebuggingService.PinnedWatches>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>
